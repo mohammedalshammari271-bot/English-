@@ -1,0 +1,77 @@
+@media screen {
+  .app-shell { max-width: 1600px; padding-inline: clamp(12px, 2.4vw, 36px); }
+  .topbar { min-height: 68px; height: auto; padding-block: 12px; flex-wrap: wrap; }
+  .top-actions { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 6px; }
+  .top-actions button, .sheet-actions button, .period-bar button { min-height: 40px; }
+  .gradebook-active.hero,
+  .gradebook-active.hero + .hero-quote { display: none; }
+  .classbar, .cloud-panel, .sheet { min-width: 0; max-width: 100%; border-radius: 12px; }
+  .classbar { box-shadow: none; border: 1px solid #cedceb; }
+  .sheet { border-color: #ccdce8; }
+  .sheet-heading { padding: clamp(14px, 2.3vw, 28px); }
+  .sheet-heading h2 { line-height: 1.3; }
+  .sheet-actions { flex-wrap: wrap; gap: 6px; }
+  .grid-status { margin: 0; padding-inline: 14px; color: #114b74; }
+  .grid-status:not(:empty) { padding-block: 8px; }
+  .table-scroll {
+    --index-width: 3rem;
+    --name-width: 12rem;
+    overflow: auto;
+    max-width: 100%;
+    max-height: min(66vh, 740px);
+    max-height: min(66dvh, 740px);
+    position: relative;
+    isolation: isolate;
+    overscroll-behavior-inline: contain;
+    scroll-padding-block-start: 62px;
+    scroll-padding-inline-start: calc(var(--index-width) + var(--name-width));
+    border-block: 1px solid #cbdbe7;
+  }
+  .table-scroll:focus-visible { outline: 2px solid #146c9d; outline-offset: -2px; }
+  .table-scroll table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 73rem; }
+  .table-scroll th,
+  .table-scroll td { box-sizing: border-box; border: 0; border-inline-end: 1px solid #d8e3ec; border-block-end: 1px solid #d8e3ec; }
+  .table-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #16486a;
+    color: #fff;
+  }
+  .table-scroll thead th :is(span,small) { color: inherit; }
+  .table-scroll :is(th,td):nth-child(-n+2) { position: sticky; }
+  .table-scroll :is(th,td):first-child {
+    inset-inline-start: 0;
+    width: var(--index-width);
+    min-width: var(--index-width);
+    max-width: var(--index-width);
+  }
+  .table-scroll :is(th,td):nth-child(2) {
+    inset-inline-start: var(--index-width);
+    width: var(--name-width);
+    min-width: var(--name-width);
+    max-width: var(--name-width);
+    border-inline-end: 2px solid #8da9bf;
+  }
+  .table-scroll thead th:nth-child(-n+2) { z-index: 4; background: #123b59; }
+  .table-scroll tbody td:nth-child(-n+2) { z-index: 1; background: #fff; }
+  .table-scroll tbody tr:nth-child(even) td:nth-child(-n+2) { background: #f1f7fb; }
+  .table-scroll tbody tr:focus-within td:nth-child(-n+2) { background: #e3f2fa; }
+  .table-scroll .name-input { min-width: 0; width: 100%; }
+  .table-scroll :is(.name-input,.score-input) { min-height: 36px; border-radius: 4px; }
+  .table-scroll :is(.name-input,.score-input):focus { outline: 2px solid #1c79a5; outline-offset: -2px; }
+}
+@media screen and (max-width: 760px) {
+  .topbar { align-items: stretch; gap: 8px; }
+  .top-actions { gap: 4px; }
+  .top-actions button { min-height: 40px; font-size: 12px; padding-inline: 8px; }
+  .classbar input, .classbar select, .period-bar select, .table-scroll input { font-size: 16px; }
+  .classbar input, .classbar select, .period-bar select { min-height: 42px; max-width: 100%; }
+  .sheet-heading, .summary, .sheet-footer { gap: 10px; }
+  .table-scroll { --index-width: 2rem; --name-width: clamp(7.5rem, 34vw, 10rem); }
+  .table-scroll tbody td { height: 51px; }
+  .table-scroll .score-input { width: 58px; }
+  .table-scroll .name-input { padding-inline: 5px; }
+  .table-scroll .student-id { margin-inline: 4px; }
+  .table-scroll .student-number { overflow-wrap: anywhere; }
+}
