@@ -101,8 +101,9 @@ export default {
     const owner = request.headers.get('oai-authenticated-user-id');
     if (!owner) return json({ error: 'sign_in_required' }, 401);
     if (request.method === 'GET' && Object.hasOwn(assets, path)) {
-      const [type, content] = assets[path];
-      return new Response(content, { headers: { ...headers, 'Content-Type': type } });
+      const [type, content, binary] = assets[path];
+      const body = binary ? Uint8Array.from(atob(content), char => char.charCodeAt(0)) : content;
+      return new Response(body, { headers: { ...headers, 'Content-Type': type } });
     }
     if (path === '/api/gradebook' || path.startsWith('/api/gradebook/')) {
       try {

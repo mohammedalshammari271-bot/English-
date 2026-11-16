@@ -46,3 +46,9 @@ node scripts/local.mjs
 | درجات، كشوف، أرشيف وطباعة | [Gradebook JS](./public/gradebook.js)، [HTML/CSS print examples](https://github.com/mdn/css-examples) | قواعد الدفتر والكشوف داخل المشروع ومراجع CSS |
 
 الكود المنشور يضم التطبيق والمخطط وملفات التشغيل، ولا يُخزّن حسابات المستخدمين أو بيانات الطلاب داخل GitHub. المراجع الخارجية تخضع لتراخيصها المنشورة.
+
+### واجهة إدخال الدرجات
+
+عرض «طالب واحد» هو الافتراضي على الهاتف. فيه حقول رأسية، قائمة للطالب، السابق والتالي، وخيارات الغياب والتأجيل بجانب كل درجة. عرض «جدول الصف» يبقى متاحاً في كل الأحجام، وإجراءات كل طالب مجمعة في قائمة واحدة.
+
+استفدنا من نمط [Single View في Moodle](https://docs.moodle.org/502/en/Single_view) ومصدر [Moodle Gradebook](https://github.com/moodle/moodle/tree/MOODLE_502_STABLE/grade/report). خط [Zain](https://github.com/googlefonts/zain) مضمن محلياً بالملفات العربية واللاتينية وترخيص SIL Open Font License في `public/fonts/`.
