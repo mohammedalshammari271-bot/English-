@@ -158,3 +158,84 @@ body, body [data-slot="dialog-content"], input, select, textarea, button {
   }
   .table-scroll td:is(.calc-cell,.oral-cell,.final-cell) { background:#f1f6f5; }
 }
+
+/* Bound ledger page. Table borders and column groups follow the printed grade record. */
+@media screen {
+  main { background:#eae9e5 !important; }
+  .app-shell {
+    --workspace-ink:#192c48;
+    --workspace-muted:#4a5a70;
+    --workspace-accent:#203a60;
+    --workspace-accent-soft:#eef2f7;
+    --workspace-line:#c8cdd6;
+  }
+  .topbar { min-height:54px; padding-block:8px; }
+  .brand-icon { border-radius:5px; }
+  .cloud-panel { border-radius:4px; padding:4px 8px; background:#f6f7f9; border-color:#cbd3df; }
+  .workspace-context, .paper-sheet { border-radius:0; background:#fffefb; }
+  .workspace-context { border:1px solid #a2aab8; border-bottom:0; margin:10px 0 0; padding:12px 14px 9px; }
+  .paper-sheet { border:1px solid #a2aab8; margin:0; }
+  .paper-masthead {
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr); gap:12px;
+    align-items:center; padding:8px 0 10px; border-block:3px double #344a69;
+  }
+  .paper-meta { display:grid; font-size:16px; color:#344a69; align-content:center; }
+  .paper-meta:last-child { text-align:left; }
+  .paper-meta strong { font-weight:700; }
+  .paper-title { text-align:center; color:#192c48; }
+  .paper-title h1 { font-size:clamp(25px,4vw,39px); line-height:1; font-weight:800; margin:0; }
+  .paper-title p { margin:4px 0 0; font-size:16px; font-weight:700; letter-spacing:.12em; }
+  .year-banner { margin:5px 0 2px; min-height:0; }
+  .context-pickers { gap:8px; grid-template-columns:1fr 1fr; }
+  .context-pickers select { min-height:35px; border-radius:3px; background:#fff; }
+  .context-actions { margin-top:3px; }
+  .work-heading { padding-top:7px; }
+  .work-heading h2 { font-size:22px; color:#203a60; }
+  .work-heading > button { border-radius:4px; }
+  .entry-toolbar { padding-top:5px; padding-bottom:6px; }
+  .entry-toggle { border-radius:4px; background:#eeeef0; }
+  .entry-toggle button { border-radius:3px; min-height:30px; }
+  .summary { background:#f8f8f7; }
+  .grade-filters { margin-block:5px; }
+  .table-scroll {
+    --group-depth:30px;
+    --index-width:2rem;
+    --name-width:11rem;
+    border-block:2px solid #465575;
+    scroll-padding-block-start:78px;
+  }
+  .table-scroll table { min-width:58rem; }
+  .table-scroll.exam-grid table { min-width:36rem; }
+  .table-scroll :is(th,td) { border-inline-end:1px solid #919aab; border-block-end:1px solid #929bab; }
+  .table-scroll thead th { color:#182f51; text-align:center; font-weight:800; background:#f5f2e9; }
+  .table-scroll .paper-group-head th { background:#e5e9ef; height:var(--group-depth); top:0; font-size:16px; border-block-end:1px solid #6c7991; }
+  .table-scroll .paper-column-head th {
+    position:sticky; inset-inline-start:auto; top:var(--group-depth); z-index:2;
+    width:auto; min-width:3.4rem; max-width:none; height:46px;
+    border-inline-end:1px solid #919aab; background:#f7f4ec;
+  }
+  .table-scroll .paper-group-head :is(.paper-number,.paper-name) {
+    height:76px; z-index:5; color:#192c48; background:#e5e9ef;
+  }
+  .table-scroll thead th small { color:#45546b; }
+  .table-scroll tbody td { color:#1c304d; height:44px; background:#fffefb; }
+  .table-scroll tbody tr:nth-child(even) td { background:#f8f8f6; }
+  .table-scroll tbody td:nth-child(-n+2) { background:#fffdf5; }
+  .table-scroll tbody tr:nth-child(even) td:nth-child(-n+2) { background:#f4f4ef; }
+  .table-scroll tbody tr:focus-within td { background:#eef3fa; }
+  .table-scroll tbody td:nth-last-child(2) { background:#edf0f5; font-weight:800; }
+  .table-scroll .score-input { width:100%; min-width:2.6rem; border-radius:0; }
+  .table-scroll .student-menu-column select { border-radius:3px; color:#233b60; background:#fff; }
+  .sheet-footer { background:#faf9f4; }
+}
+@media screen and (max-width:760px) {
+  .workspace-context { padding:7px 8px 5px; }
+  .paper-masthead { grid-template-columns:1fr 1fr; column-gap:8px; row-gap:4px; padding-block:5px; }
+  .paper-title { grid-row:1; grid-column:1 / -1; }
+  .paper-title p { font-size:13px; }
+  .paper-meta { display:flex; gap:4px; padding-top:3px; border-top:1px solid #c8cdd6; font-size:13px; }
+  .paper-meta:last-child { justify-content:flex-end; }
+  .year-banner button { min-height:30px; }
+  .table-scroll { --index-width:1.8rem; --name-width:7.5rem; }
+  .table-scroll .student-id { font-size:12px; line-height:1; }
+}

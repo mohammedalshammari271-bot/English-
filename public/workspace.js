@@ -1,18 +1,6 @@
 (() => {
   function useView(React) {
-    const [compact, setCompact] = React.useState(() => matchMedia('(max-width: 760px)').matches);
-    const [choice, setChoice] = React.useState(null);
-    React.useEffect(() => {
-      const query = matchMedia('(max-width: 760px)');
-      const update = () => setCompact(query.matches);
-      if (query.addEventListener) query.addEventListener('change', update);
-      else query.addListener(update);
-      return () => {
-        if (query.removeEventListener) query.removeEventListener('change', update);
-        else query.removeListener(update);
-      };
-    }, []);
-    return [choice || (compact ? 'student' : 'grid'), setChoice];
+    return React.useState('grid');
   }
 
   function StudentForm({ React, rows, rowId, choose, fields, update, statusValue, readOnly, threshold, calculate, actions, ScoreInput }) {
