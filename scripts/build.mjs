@@ -3,7 +3,6 @@ const assets = {};
 for (const [path, file, type] of [
   ['/', 'index.html', 'text/html; charset=utf-8'],
   ['/gradebook.js', 'gradebook.js', 'text/javascript; charset=utf-8'],
-  ['/workspace.js', 'workspace.js', 'text/javascript; charset=utf-8'],
   ['/fonts/zain.css', 'fonts/zain.css', 'text/css; charset=utf-8'],
   ['/layout.css', 'layout.css', 'text/css; charset=utf-8'],
   ['/grid.js', 'grid.js', 'text/javascript; charset=utf-8'],

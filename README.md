@@ -47,12 +47,6 @@ node scripts/local.mjs
 
 الكود المنشور يضم التطبيق والمخطط وملفات التشغيل، ولا يُخزّن حسابات المستخدمين أو بيانات الطلاب داخل GitHub. المراجع الخارجية تخضع لتراخيصها المنشورة.
 
-### واجهة إدخال الدرجات
+### واجهة دفتر الدرجات
 
-عرض «عرض طالب» متاح على الهاتف. فيه حقول رأسية، قائمة للطالب، السابق والتالي، وخيارات الغياب والتأجيل بجانب كل درجة. عرض «صفحة السجل» هو الافتراضي في كل الأحجام، وإجراءات كل طالب مجمعة في قائمة واحدة.
-
-استفدنا من نمط [Single View في Moodle](https://docs.moodle.org/502/en/Single_view) ومصدر [Moodle Gradebook](https://github.com/moodle/moodle/tree/MOODLE_502_STABLE/grade/report). خط [Zain](https://github.com/googlefonts/zain) مضمن محلياً بالملفات العربية واللاتينية وترخيص SIL Open Font License في `public/fonts/`.
-
-### صفحة السجل
-
-عرض دفتر الصف هو الافتراضي على كل الشاشات. المهارات تحتفظ بعناوين المصدر `Listening` و`Reading` و`Speaking`. جُمعت رؤوس جدول الشاشة في أقسام للمتابعة والشفوي والامتحان، اعتماداً على أعمدة كشف الدفتر الداخلي، مع الاستفادة من [Moodle Grader Report](https://github.com/moodle/moodle/blob/main/public/grade/report/grader/index.php) مرجعاً لتثبيت رؤوس الجدول.
+تعرض الواجهة الأصلية أعمدة المهارات `Listening` و`Reading` و`Speaking`، وتدعم التمرير داخل الجدول واللصق من Excel. وضع «إدخال سريع» متاح لإدخال درجات طالب واحد. خط [Zain](https://github.com/googlefonts/zain) مضمن محلياً بالملفات العربية واللاتينية وترخيص SIL Open Font License في `public/fonts/`.
