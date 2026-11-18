@@ -100,6 +100,11 @@ export default {
     const path = new URL(request.url).pathname;
     const owner = request.headers.get('oai-authenticated-user-id');
     if (!owner) return json({ error: 'sign_in_required' }, 401);
+    const model=/^\/vendor\/ocr\/(ara|eng)\.traineddata\.gz$/.exec(path);
+    if(request.method==='GET'&&model){
+      const language=model[1];
+      return Response.redirect('https://cdn.jsdelivr.net/npm/@tesseract.js-data/'+language+'@1.0.0/4.0.0_best_int/'+language+'.traineddata.gz',302);
+    }
     if (request.method === 'GET' && Object.hasOwn(assets, path)) {
       const [type, content, binary] = assets[path];
       const body = binary ? Uint8Array.from(atob(content), char => char.charCodeAt(0)) : content;

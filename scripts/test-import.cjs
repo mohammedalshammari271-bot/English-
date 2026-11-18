@@ -1,0 +1,42 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const {JSDOM}=require('jsdom');
+const root=require('node:path').resolve(__dirname,'..');
+const dom=new JSDOM('<div id="root"></div>',{url:'http://localhost/',runScripts:'outside-only'});
+const w=dom.window; w.matchMedia=()=>({matches:false,addEventListener(){}});const map=w.document.createElement('script');map.id='edit-map';map.textContent='{}';w.document.body.append(map); w.TextDecoder=TextDecoder; w.TextEncoder=TextEncoder;
+let bundle=fs.readFileSync(root+'/public/gradebook.js','utf8');
+try {w.eval(bundle.slice(0,bundle.indexOf('i(TD,"App");'))+'window.qaSheet={ql,Hn,el,An,Rr};})();')} catch(e){console.log(e.name+': '+e.message);process.exit(1)}
+w.JSZip=require(root+'/node_modules/jszip');
+w.eval(fs.readFileSync(root+'/public/name-import.js','utf8').replace('window.gradebookNames={ImportPage}','window.gradebookNames={ImportPage,read,readDocx,clean,validName,suggest,decode}'));
+const api=w.gradebookNames;
+const q=w.qaSheet;
+const readSheet=new Function('ql','Hn',bundle.slice(bundle.indexOf('function readNamesSpreadsheet'),bundle.indexOf('if(page!=="grades")'))+'return readNamesSpreadsheet;')(q.ql,q.Hn);
+const bytes=t=>new TextEncoder().encode(t);
+const file=(name,b)=>({name,size:b.length,type:'',arrayBuffer:async()=>Uint8Array.from(b).buffer});
+(async()=>{
+ assert.equal(readSheet(new Uint8Array(fs.readFileSync(root+'/tests/fixtures/names.xlsx')),'xlsx')[0].rows[1][1],'علي حسين');
+ let datasets=await api.read(file('names.csv',bytes('ت,اسم الطالب,الشعبة\n1,علي حسين,أ\n2,محمد أحمد,أ')),'file','ara',()=>{},{},readSheet);
+ assert.equal(datasets[0].rows[1][1],'علي حسين');assert.equal(api.suggest(datasets[0]).column,1);assert.equal(api.suggest(datasets[0]).first,2);
+ datasets=await api.read(file('names.tsv',bytes('الاسم\tالصف\nحسن علي\tالأول')),'file','ara',()=>{},{},readSheet);assert.equal(datasets[0].rows[1][0],'حسن علي');
+ const zip=new w.JSZip();zip.file('word/document.xml','<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:tbl><w:tr><w:tc><w:p><w:r><w:t>اسم الطالب</w:t></w:r></w:p></w:tc></w:tr><w:tr><w:tc><w:p><w:r><w:t>حسين علي</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:p><w:r><w:t>أحمد حسن</w:t></w:r></w:p></w:body></w:document>');
+ datasets=await api.readDocx(await zip.generateAsync({type:'uint8array'}));assert.equal(datasets.length,2);assert.equal(datasets[0].rows[1][0],'حسين علي');assert.equal(datasets[1].rows[0][0],'أحمد حسن');
+ assert.equal(api.clean('١. حسن علي'),'حسن علي');assert.equal(api.clean('2 - محمد أحمد ٣'),'محمد أحمد');assert(!api.validName('اسم الطالب'));assert(!api.validName('١٢٣'));assert(api.validName('Ali Hassan'));
+ assert.equal(api.decode(Uint8Array.from([255,254,65,0])),'A');
+ await assert.rejects(()=>api.read(file('x.exe',bytes('abc')),'file','ara',()=>{},{},readSheet),/الصيغة/);
+ await assert.rejects(()=>api.read(file('x.txt',[]),'file','ara',()=>{},{},readSheet),/حجم/);
+ let book={classes:[{id:'a',rows:[{id:'existing',name:'علي حسين',listening:'8'},{id:'empty',name:''},{id:'zero',name:'',listening:0}],periods:[{id:'month',rows:[{id:'existing',name:'علي حسين',listening:'9'}]},{id:'exam',kind:'exam',rows:[{id:'existing',name:'علي حسين',oralExam:'20'}]}]},{id:'b',rows:[],periods:[]}]};
+ let idx=0; const noop=()=>{};
+ const makeImport=new Function('t','An','el','Rr','Ie','l','ve','u','K','Ee',bundle.slice(bundle.indexOf('function importNames'),bundle.indexOf('function readNamesSpreadsheet'))+'return importNames;');
+ const importNames=makeImport(fn=>{book=fn(book)},q.An,()=>({id:'new'+(++idx),name:'',listening:''}),q.Rr,noop,noop,noop,noop,noop,noop);
+ let result=importNames('a',['علي حسين','حسن أحمد','حسن أحمد'],false);
+ assert.equal(result.added,1);assert.equal(result.skipped,2);assert.equal(book.classes[0].rows.length,3);assert.equal(book.classes[0].rows[1].listening,0);assert.equal(book.classes[0].rows[0].listening,'8');
+ const added=book.classes[0].rows.at(-1);assert.equal(book.classes[0].periods[0].rows.at(-1).id,added.id);assert.equal(book.classes[0].periods[1].rows.at(-1).examMode,true);assert.equal(book.classes[0].periods[1].rows[0].oralExam,'20');assert.equal(book.classes[1].rows.length,0);
+ assert.equal(importNames('missing',['اسم'],false).missing,true);assert.equal(importNames('a',['حسن أحمد'],true).added,1);
+ // Component event test: file -> editable rows -> remove -> submit to selected class.
+ let slots=[],cursor=0;const React={Fragment:'fragment',createElement:(type,props,...children)=>({type,props:props||{},children:children.flat(Infinity).filter(x=>x!==false&&x!=null)}),useState(init){const i=cursor++;if(!(i in slots))slots[i]=typeof init==='function'?init():init;return [slots[i],v=>slots[i]=typeof v==='function'?v(slots[i]):v]},useRef(init){const i=cursor++;if(!(i in slots))slots[i]={current:init};return slots[i]},useEffect(){cursor++}};
+ let received;const props={React,groups:[{id:'a',label:'صف أ'}],selectedGroup:'a',onImport:(...args)=>(received=args,{added:args[1].length,skipped:0}),spreadsheet:readSheet};
+ const render=()=>{cursor=0;return api.ImportPage(props)};const elements=n=>typeof n==='object'?[n,...n.children.flatMap(elements)]:[];
+ let tree=render();await elements(tree).find(x=>x.type==='input'&&x.props.type==='file').props.onChange({target:{files:[file('names.csv',bytes('اسم الطالب\nعلي حسين\nمحمد أحمد'))],value:'x'}});
+ tree=render();let inputs=elements(tree).filter(x=>x.type==='input'&&x.props.type==='text');assert.equal(inputs.length,2);inputs[0].props.onChange({target:{value:'علي حسين المعدل'}});
+ tree=render();elements(tree).find(x=>x.props['aria-label']==='إزالة الاسم 2').props.onClick();tree=render();elements(tree).find(x=>x.type==='form').props.onSubmit({preventDefault(){}});assert.equal(received[0],'a');assert.deepEqual(Array.from(received[1]),['علي حسين المعدل']);
+ console.log('PASS: CSV/TSV parsing, Arabic encoding, DOCX tables/paragraphs, column detection, validation, duplicate handling, all-period import, existing grades and zero preservation, editable review/remove/commit.');dom.window.close();
+})().catch(e=>{console.error(e);process.exit(1)});
